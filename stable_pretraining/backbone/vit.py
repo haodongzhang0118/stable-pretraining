@@ -4,6 +4,7 @@ import torch.nn.functional as F
 from typing import Optional, Tuple, Literal, Union
 import timm
 from timm.layers import DropPath, Mlp, trunc_normal_
+from loguru import logger
 from .patch_masking import PatchMasking
 from dataclasses import dataclass
 from .pos_embed import (
@@ -267,6 +268,12 @@ class MaskedEncoder(nn.Module):
 
             self.vit = timm.create_model(model_or_model_name, **create_kwargs)
         else:
+            logger.warning(
+                "MaskedEncoder received a pre-instantiated nn.Module. "
+                "Internals assume a timm ViT model with attributes such as "
+                "patch_embed, pos_embed, cls_token, blocks, norm, etc. "
+                "If you pass a non-timm module, unexpected errors may occur."
+            )
             self.vit = model_or_model_name
             if patch_size is not None:
                 self._rebuild_patch_embed(patch_size, img_size)
