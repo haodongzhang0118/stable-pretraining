@@ -146,7 +146,9 @@ class TestIJEPAModuleInput:
         # Verify deterministic loss
         final_loss = trainer.callback_metrics.get("fit/loss_step")
         assert final_loss is not None, "No loss logged"
-        print(f"\nIJEPA (loaded module) final loss after 3 steps: {final_loss.item():.6f}")
+        print(
+            f"\nIJEPA (loaded module) final loss after 3 steps: {final_loss.item():.6f}"
+        )
         expected = torch.tensor(0.515345)
         assert torch.isclose(final_loss.cpu(), expected, atol=1e-4), (
             f"IJEPA loss {final_loss.item():.6f} != expected {expected.item():.6f}"
